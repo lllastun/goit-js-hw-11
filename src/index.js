@@ -2,10 +2,11 @@ import SimpleLightbox from 'simplelightbox';
 import getSearchRequest from './create-seach-request';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
-// const searchButtonElement = document.querySelector('.search-form button');
 const searchFormElement = document.querySelector('.search-form');
 const galleryElement = document.querySelector('.gallery');
 const loadMoreElement = document.querySelector('.load-more');
+const inpValueEl = searchFormElement.elements.searchQuery;
+
 let page = 0;
 let totalImageOnScreen = 0;
 let totalHits = 0;
@@ -23,14 +24,16 @@ function clearGallery() {
 }
 
 function loadMoreRefresh() {
-  page === 0
-    ? loadMoreElement.classList.add('hide')
-    : loadMoreElement.classList.remove('hide');
+  if (totalImageOnScreen < totalHits) {
+    loadMoreElement.classList.remove('hide');
+  } else {
+    loadMoreElement.classList.add('hide');
+  }
 }
 
 function createCards(data) {
-  totalImageOnScreen = +data.hits.length;
-  console.log(totalImageOnScreen);
+  totalImageOnScreen = totalImageOnScreen + data.hits.length;
+  // console.log(totalImageOnScreen);
   data.hits.forEach(data => {
     const likes = `<span class="info-value">${data.likes}</span>`;
     const views = `<span class="info-value">${data.views}</span>`;
@@ -64,43 +67,31 @@ function handleSearch(event) {
   event.preventDefault();
   clearGallery();
   const cards = [];
-  page = + 1;
-  const searchRequest = getSearchRequest(event, page);
+  page = +1;
+  const inputSearh = inpValueEl.value;
+  const searchRequest = getSearchRequest(inputSearh, page);
   // console.log(searchRequest);
   async function proc() {
     let data = await getData(searchRequest);
     createCards(data);
   }
   const data = proc();
-
-  // data.hits.forEach(data => {
-  //   createCards(data);
-  // const data = async getData(searchRequest){
-  //   try{
-  //     await (console.log);
-  //   }
-  // }
 }
 async function getData(searchRequest) {
   const responce = await fetch(searchRequest);
   const data = await responce.json();
   totalHits = data.totalHits;
-  console.log(totalHits);
+  // console.log(totalHits);
   return data;
 }
 
 function handleLoadMore(event) {
-  const searchRequest = getSearchRequest(event, page + 1);
-  // console.log(searchRequest);
+  page = page + 1;
+  const req = inpValueEl.value;
+  const searchRequest = getSearchRequest(req, page);
+  async function proc() {
+    let data = await getData(searchRequest);
+    createCards(data);
+  }
+  const data = proc();
 }
-
-// function getData(searchRequest){
-//   fetch(searchRequest)
-//   .then(r => r.json())
-//   .then(d => {
-//     console.log(d.hits);
-//     d.hits.forEach(data => {
-//       createCard(data);
-//     });
-//   });
-// }

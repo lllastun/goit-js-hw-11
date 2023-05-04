@@ -1,15 +1,13 @@
-const API = 'https://pixabay.com/api/';
+const API = 'https://pixabay.com/api';
 const API_KEY = '35997534-743ef0023491800c2d14ecb92';
 const REQUEST_PARAMETRS = 'image_type=photo&orientation=horizontal&safesearch=true';
-const perPage = 40;
+const perPage = 100;
 
-
-export default function createSearchRequest(event, page){
-  const inputValue = event.target.elements.searchQuery.value;
-  const arr = inputValue.trim().split(' ').join('+');
+export default function createSearchRequest(req, page){
+  const arr = req.split(' ').join('+');
   return `${API}?key=${API_KEY}&q=${arr}&${REQUEST_PARAMETRS}&per_page=${perPage}&page=${page}`;
 }
- 
+
 const imgxxx = 
 {"id":736877,
 "pageURL":"https://pixabay.com/photos/tree-cat-silhouette-moon-full-moon-736877/",
