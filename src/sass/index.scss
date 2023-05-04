@@ -1,2 +1,69 @@
 @import './common';
 @import './example';
+
+body {
+  background-color: #fafafa;
+  text-align: center;
+}
+.search-form {
+  display: flex;
+  align-items: baseline;
+  // justify-content: center;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+.wrap-search-form {
+  height: 60px;
+  background-color: #3f57b3;
+  box-shadow:  0 0 4px 2px rgba(0, 0, 0, 0.6);
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.search-form input[type="text"] {
+  flex-grow: 1;
+  height: 40px;
+  padding: 10px;
+  border: none;
+  border-bottom: 2px solid #ccc;
+  font-size: 16px;
+  margin: 10px 0 0 0;
+}
+
+.search-form button[type="submit"] {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: #ccc;
+  font-weight: 600;
+  margin-left: -65px;
+}
+
+.search-form button[type="submit"]:hover {
+  color: #333;
+}
+
+.load-more {
+  padding: 10px 22px;
+  margin-bottom: 16px;
+  font-size: 20px;
+  color: #f5fdff;
+  background-color: #3f57b3;
+  text-transform: uppercase;
+  // #30459c
+}
+
+.link-img {
+  transition: transform 0.3s ease;
+}
+
+.photo-card {
+  transition: transform 0.15s ease;
+}
+
+.photo-card:hover {
+  transform: scale(1.02);
+}
