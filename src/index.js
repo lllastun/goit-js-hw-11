@@ -1,4 +1,6 @@
 import SimpleLightbox from 'simplelightbox';
+import axios, { isCancel, AxiosError } from 'axios';
+import { Notify } from 'notiflix';
 import getSearchRequest from './create-seach-request';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
@@ -29,10 +31,18 @@ function loadMoreRefresh() {
   } else {
     loadMoreElement.classList.add('hide');
   }
+  if (totalImageOnScreen === totalHits) {
+    galleryElement.insertAdjacentHTML(
+    'afterend',
+    `<p>We're sorry, but you've reached the end of search results.<p>`)}
 }
 
 function createCards(data) {
   totalImageOnScreen = totalImageOnScreen + data.hits.length;
+   if (totalHits===0) {Notify.failure(
+    `Sorry, there are no images matching your search query. Please try again.`);
+    return 
+  }
   // console.log(totalImageOnScreen);
   data.hits.forEach(data => {
     const likes = `<span class="info-value">${data.likes}</span>`;
@@ -62,11 +72,11 @@ function createCards(data) {
 
 searchFormElement.addEventListener('submit', handleSearch);
 loadMoreElement.addEventListener('click', handleLoadMore);
+// galleryElement.addEventListener('click', increaseImg);
 
 function handleSearch(event) {
   event.preventDefault();
   clearGallery();
-  const cards = [];
   page = +1;
   const inputSearh = inpValueEl.value;
   const searchRequest = getSearchRequest(inputSearh, page);
@@ -78,11 +88,15 @@ function handleSearch(event) {
   const data = proc();
 }
 async function getData(searchRequest) {
-  const responce = await fetch(searchRequest);
-  const data = await responce.json();
-  totalHits = data.totalHits;
-  // console.log(totalHits);
-  return data;
+  const responce = await axios.get(searchRequest);
+  // console.log(responce);
+    try {
+    const data = responce.data;
+    totalHits = data.totalHits;
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 function handleLoadMore(event) {
